@@ -14,16 +14,3 @@
 Route::get('/', function () {
   return view('welcome');
 });
-
-Route::get('/ingredients', function () {
-  return response()->json([
-    'salad' => 0,
-    'bacon' => 0,
-    'cheese' => 0,
-    'meat' => 0,
-  ], 200);
-});
-
-Route::get('/orders', 'OrderController@index');
-Route::get('/orders/{id}', 'OrderController@show');
-Route::post('/orders', 'OrderController@store');

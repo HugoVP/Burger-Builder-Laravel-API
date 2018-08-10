@@ -25,6 +25,15 @@ class OrderController extends Controller
     ];
 
     /**
+     * Create a new OrderController instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+      $this->middleware('auth:api');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
