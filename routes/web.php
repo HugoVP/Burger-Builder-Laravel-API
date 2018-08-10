@@ -12,7 +12,16 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+  return view('welcome');
+});
+
+Route::get('/ingredients', function () {
+  return response()->json([
+    'salad' => 0,
+    'bacon' => 0,
+    'cheese' => 0,
+    'meat' => 0,
+  ], 200);
 });
 
 Route::get('/orders', 'OrderController@index');

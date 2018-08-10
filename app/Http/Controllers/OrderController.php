@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Validator;
 use App\Order;
 use Illuminate\Http\Request;
@@ -62,48 +63,44 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), self::$rules);
+    public function store(Request $request) {
+      $inputs = [
+        'country' => $request->formData['country'],
+        'delivery_method' => $request->formData['deliveryMethod'],
+        'email' => $request->formData['email'],
+        'name' => $request->formData['name'],
+        'street' => $request->formData['street'],
+        'zip_code' => $request->formData['zipCode'],
+        'bacon' => $request->ingredients['bacon'],
+        'cheese' => $request->ingredients['cheese'],
+        'meat' => $request->ingredients['meat'],
+        'salad' => $request->ingredients['salad'],
+        'price' => $request->price,
+      ];
 
-        if ($validator->fails()) {
-          return response()->json($validator->errors(), 400);
-        }
+      $validator = Validator::make($inputs, self::$rules);
 
-        $order = new Order;
-        $order->country = $request->country;
-        $order->delivery_method = $request->delivery_method;
-        $order->email = $request->email;
-        $order->name = $request->name;
-        $order->street = $request->street;
-        $order->zip_code = $request->zip_code;
-        $order->bacon = $request->bacon;
-        $order->cheese = $request->cheese;
-        $order->meat = $request->meat;
-        $order->salad = $request->salad;
-        $order->price = $request->price;
-
-        if (!$order->save()) {
-          return response()->json(['error' => 'order_not_saved'], 500);
-        }
-
-        return response()->json($order, 200);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-      try {
-        $order = Order::findOrFail($id);
-      } catch (ModelNotFoundException $e) {
-        return response()->json(['error' => 'order_not_found'], 404);
+      if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
       }
 
-      return response()->json($order, 200);
+      $order = new Order;
+      $order->country = $inputs['country'];
+      $order->delivery_method = $inputs['delivery_method'];
+      $order->email = $inputs['email'];
+      $order->name = $inputs['name'];
+      $order->street = $inputs['street'];
+      $order->zip_code = $inputs['zip_code'];
+      $order->bacon = $inputs['bacon'];
+      $order->cheese = $inputs['cheese'];
+      $order->meat = $inputs['meat'];
+      $order->salad = $inputs['salad'];
+      $order->price = $inputs['price'];
+
+      if (!$order->save()) {
+        return response()->json(['error' => 'order_not_saved'], 500);
+      }
+
+      return response()->json($inputs, 200);
     }
 }
