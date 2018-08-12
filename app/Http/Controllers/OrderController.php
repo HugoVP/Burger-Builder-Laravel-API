@@ -7,6 +7,7 @@ use Validator;
 use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 { 

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use JWTAuth;
 use Validator;
 use App\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthController extends Controller {
   protected static $rules = [
@@ -19,6 +23,7 @@ class AuthController extends Controller {
    * @return void
    */
   public function __construct() {
+    // $this->middleware('tymon.jwt.auth', ['except' => ['signup', 'login']]);
     $this->middleware('auth:api', ['except' => ['signup', 'login']]);
   }
 
@@ -29,7 +34,7 @@ class AuthController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function signup(Request $request) {
-    $credentials = $request->only(['email', 'password']);
+    $credentials = request(['email', 'password']);
     $validator = Validator::make($credentials, self::$rules);
     
     if ($validator->fails()) {
@@ -104,6 +109,16 @@ class AuthController extends Controller {
    */
   public function logout() {
     auth()->logout();
+    
+    // try {
+    //   JWTAuth::parseToken()->invalidate();
+    // } catch (TokenExpiredException $e) {
+    //     return response()->json(['error' => 'token_expired'], $e->getStatusCode());
+    // } catch (TokenInvalidException $e) {
+    //     return response()->json(['error' => 'token_invalid'], 401);
+    // } catch (JWTException $e) {
+    //     return response()->json(['error' => 'token_not_provided'], $e->getStatusCode());
+    // }
 
     return response()->json(['message' => 'Successfully logged out']);
   }

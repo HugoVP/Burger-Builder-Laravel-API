@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/khlafjhajlkhfalkaflkjfakljafjbafjafkj', function () {
+  return response()->json(['error' => ['message' => 'Unauthenticated']], 401);
+})->name('login');
 
 Route::get('/ingredients', function () {
   return response()->json([
@@ -27,7 +27,7 @@ Route::get('/ingredients', function () {
 });
 
 Route::group([
-  'middleware' => ['api'],
+  'middleware' => 'api',
   'prefix' => 'orders',
 ], function ($router) {
   Route::get('/', 'OrderController@index');
