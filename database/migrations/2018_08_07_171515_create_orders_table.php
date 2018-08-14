@@ -14,16 +14,16 @@ class CreateOrdersTable extends Migration {
     Schema::create('orders', function (Blueprint $table) {
       $table->increments('id');
       $table->integer('user_id')->unsigned();
-      $table->string('country', 32);
-      $table->string('delivery_method', 32);
-      $table->string('email', 32);
-      $table->string('name', 32);
-      $table->string('street', 32);
-      $table->string('zip_code', 32);
-      $table->smallInteger('bacon');
-      $table->smallInteger('cheese');
-      $table->smallInteger('meat');
-      $table->smallInteger('salad');
+      $table->string('country', 100);
+      $table->enum('delivery_method', ['fastest', 'cheapest']);
+      $table->string('email', 100);
+      $table->string('name', 100);
+      $table->string('street', 100);
+      $table->string('zip_code', 5);
+      $table->tinyInteger('bacon')->unsigned();
+      $table->tinyInteger('cheese')->unsigned();
+      $table->tinyInteger('meat')->unsigned();
+      $table->tinyInteger('salad')->unsigned();
       $table->float('price', 8, 2);
       $table->timestamps();
     });

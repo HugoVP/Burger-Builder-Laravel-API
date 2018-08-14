@@ -11,16 +11,16 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 class OrderController extends Controller
 { 
     protected const RULES = [
-      'country' => 'required|regex:/^[\\p{L}\s.]{1,32}$/u',
+      'country' => 'required|regex:/^[\\p{L}\s.]{1,100}$/u',
       'delivery_method' => 'required|in:fastest,cheapest',
-      'email' => 'required|email',
-      'name' => 'required|regex:/^[\\p{L}\s]{1,32}$/u',
-      'street' => 'required|regex:/^[\\p{L}\s.0-9]{1,32}$/u',
+      'email' => 'required|email|max:100',
+      'name' => 'required|regex:/^[\\p{L}\s]{1,100}$/u',
+      'street' => 'required|regex:/^[\\p{L}\s.0-9]{1,100}$/u',
       'zip_code' => 'required|digits:5',
-      'bacon' => 'required|integer',
-      'cheese' => 'required|integer',
-      'meat' => 'required|integer',
-      'salad' => 'required|integer',
+      'bacon' => 'required|integer|max:255',
+      'cheese' => 'required|integer|max:255',
+      'meat' => 'required|integer|max:255',
+      'salad' => 'required|integer|max:255',
     ];
 
     protected const BASE_PRICE = 4;
