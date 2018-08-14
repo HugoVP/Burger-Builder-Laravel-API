@@ -23,15 +23,6 @@ class OrderController extends Controller
       'salad' => 'required|integer|max:255',
     ];
 
-    protected const BASE_PRICE = 4;
-
-    protected const INGREDIENT_PRICES = [
-      'salad' => 0.5,
-      'cheese' => 0.4,
-      'meat' => 1.3,
-      'bacon' => 0.7,
-    ];
-
     /**
      * Create a new OrderController instance.
      *
@@ -111,11 +102,6 @@ class OrderController extends Controller
       $order->cheese = $inputs['cheese'];
       $order->meat = $inputs['meat'];
       $order->salad = $inputs['salad'];
-      $order->price = self::BASE_PRICE
-        + self::INGREDIENT_PRICES['salad'] * $inputs['salad']
-        + self::INGREDIENT_PRICES['cheese'] * $inputs['cheese']
-        + self::INGREDIENT_PRICES['meat'] * $inputs['meat']
-        + self::INGREDIENT_PRICES['bacon'] * $inputs['bacon'];
 
       if (!$order->save()) {
         return response()->json(['error' => ['message' => 'order_not_saved']], 500);

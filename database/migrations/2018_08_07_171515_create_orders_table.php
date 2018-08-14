@@ -24,7 +24,6 @@ class CreateOrdersTable extends Migration {
       $table->tinyInteger('cheese')->unsigned();
       $table->tinyInteger('meat')->unsigned();
       $table->tinyInteger('salad')->unsigned();
-      $table->float('price', 8, 2);
       $table->timestamps();
     });
   }
