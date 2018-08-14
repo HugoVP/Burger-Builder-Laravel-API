@@ -10,18 +10,26 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class OrderController extends Controller
 { 
-    protected static $rules = [
-      'country' => 'required',
-      'delivery_method' => 'required',
-      'email' => 'required',
-      'name' => 'required',
-      'street' => 'required',
-      'zip_code' => 'required',
-      'bacon' => 'required',
-      'cheese' => 'required',
-      'meat' => 'required',
-      'salad' => 'required',
-      'price' => 'required',
+    protected const RULES = [
+      'country' => 'required|regex:/^[\\p{L}\s.]{1,32}$/u',
+      'delivery_method' => 'required|in:fastest,cheapest',
+      'email' => 'required|email',
+      'name' => 'required|regex:/^[\\p{L}\s]{1,32}$/u',
+      'street' => 'required|regex:/^[\\p{L}\s.0-9]{1,32}$/u',
+      'zip_code' => 'required|digits:5',
+      'bacon' => 'required|integer',
+      'cheese' => 'required|integer',
+      'meat' => 'required|integer',
+      'salad' => 'required|integer',
+    ];
+
+    protected const BASE_PRICE = 4;
+
+    protected const INGREDIENT_PRICES = [
+      'salad' => 0.5,
+      'cheese' => 0.4,
+      'meat' => 1.3,
+      'bacon' => 0.7,
     ];
 
     /**
@@ -83,10 +91,9 @@ class OrderController extends Controller
         'cheese' => $request->ingredients['cheese'],
         'meat' => $request->ingredients['meat'],
         'salad' => $request->ingredients['salad'],
-        'price' => $request->price,
       ];
 
-      $validator = Validator::make($inputs, self::$rules);
+      $validator = Validator::make($inputs, self::RULES);
 
       if ($validator->fails()) {
         return response()->json(['error' => ['message' => $validator->errors()->first()]], 400);
@@ -104,12 +111,16 @@ class OrderController extends Controller
       $order->cheese = $inputs['cheese'];
       $order->meat = $inputs['meat'];
       $order->salad = $inputs['salad'];
-      $order->price = $inputs['price'];
+      $order->price = self::BASE_PRICE
+        + self::INGREDIENT_PRICES['salad'] * $inputs['salad']
+        + self::INGREDIENT_PRICES['cheese'] * $inputs['cheese']
+        + self::INGREDIENT_PRICES['meat'] * $inputs['meat']
+        + self::INGREDIENT_PRICES['bacon'] * $inputs['bacon'];
 
       if (!$order->save()) {
         return response()->json(['error' => ['message' => 'order_not_saved']], 500);
       }
 
-      return response()->json($inputs, 200);
+      return response(NULL, 204);
     }
 }

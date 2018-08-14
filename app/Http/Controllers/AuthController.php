@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class AuthController extends Controller {
   protected static $rules = [
-    'email' => 'required|email|unique:users', /* Alphanumeric (no numbers at te beggining) */
+    'email' => 'required|email|unique:users',
     'password' => 'required|regex:/^(?!.*\s).{6,255}$/', /* Only no-space characters */
   ];
 
