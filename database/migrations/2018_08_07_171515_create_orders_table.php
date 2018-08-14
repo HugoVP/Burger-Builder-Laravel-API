@@ -27,13 +27,6 @@ class CreateOrdersTable extends Migration {
       $table->float('price', 8, 2);
       $table->timestamps();
     });
-
-    Schema::table('orders', function (Blueprint $table) {
-      $table
-        ->foreign('user_id')->references('id')->on('users')
-        ->onDelete('restrict')
-        ->onUpdate('restrict');
-    });
   }
 
   /**
@@ -42,10 +35,6 @@ class CreateOrdersTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::table('orders', function (Blueprint $table) {
-      $table->dropForeign('orders_user_id_foreign');
-    });
-
     Schema::dropIfExists('orders');
   }
 }
