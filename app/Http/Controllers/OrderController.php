@@ -6,6 +6,7 @@ use Validator;
 use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class OrderController extends Controller
 { 
@@ -38,9 +39,7 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-      $orders = Order::all();
-      
-      $orders = $orders->mapWithKeys(function ($order) {
+      $orders = auth()->user()->orders->mapWithKeys(function ($order) {
         return [
           $order['id'] => [
             'formData' => [
@@ -58,6 +57,7 @@ class OrderController extends Controller
               'salad' => $order['salad'],
             ],            
             'price' => $order['price'],
+            'localId' => $order['user_id'],
           ],
         ];
       });
@@ -93,6 +93,7 @@ class OrderController extends Controller
       }
 
       $order = new Order;
+      $order->user_id = auth()->user()->id;
       $order->country = $inputs['country'];
       $order->delivery_method = $inputs['delivery_method'];
       $order->email = $inputs['email'];

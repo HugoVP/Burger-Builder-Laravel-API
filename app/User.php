@@ -3,6 +3,7 @@
 namespace App;
 
 use Hash;
+use App\Order;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -48,5 +49,12 @@ class User extends Authenticatable implements JWTSubject {
    */
   public function getJWTCustomClaims() {
     return [];
+  }
+
+  /**
+   * Get the orders that the user owns.
+   */
+  public function orders() {
+    return $this->hasMany(Order::class);
   }
 }

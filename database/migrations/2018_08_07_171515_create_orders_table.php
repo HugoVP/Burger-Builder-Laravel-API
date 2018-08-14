@@ -13,7 +13,7 @@ class CreateOrdersTable extends Migration {
   public function up() {
     Schema::create('orders', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('user_id')->unsigned()->default(1);
+      $table->integer('user_id')->unsigned();
       $table->string('country', 32);
       $table->string('delivery_method', 32);
       $table->string('email', 32);
@@ -28,12 +28,12 @@ class CreateOrdersTable extends Migration {
       $table->timestamps();
     });
 
-    // Schema::table('orders', function (Blueprint $table) {
-    //   $table
-    //     ->foreign('user_id')->references('id')->on('users')
-    //     ->onDelete('restrict')
-    //     ->onUpdate('restrict');
-    // });
+    Schema::table('orders', function (Blueprint $table) {
+      $table
+        ->foreign('user_id')->references('id')->on('users')
+        ->onDelete('restrict')
+        ->onUpdate('restrict');
+    });
   }
 
   /**
@@ -42,9 +42,9 @@ class CreateOrdersTable extends Migration {
    * @return void
    */
   public function down() {
-    // Schema::table('orders', function (Blueprint $table) {
-    //   $table->dropForeign('orders_user_id_foreign');
-    // });
+    Schema::table('orders', function (Blueprint $table) {
+      $table->dropForeign('orders_user_id_foreign');
+    });
 
     Schema::dropIfExists('orders');
   }
