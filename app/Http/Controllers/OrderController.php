@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Log;
 use Validator;
 use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 { 
@@ -91,7 +89,7 @@ class OrderController extends Controller
       $validator = Validator::make($inputs, self::$rules);
 
       if ($validator->fails()) {
-        return response()->json($validator->errors(), 400);
+        return response()->json(['error' => ['message' => $validator->errors()->first()]], 400);
       }
 
       $order = new Order;
@@ -108,7 +106,7 @@ class OrderController extends Controller
       $order->price = $inputs['price'];
 
       if (!$order->save()) {
-        return response()->json(['error' => 'order_not_saved'], 500);
+        return response()->json(['error' => ['message' => 'order_not_saved']], 500);
       }
 
       return response()->json($inputs, 200);

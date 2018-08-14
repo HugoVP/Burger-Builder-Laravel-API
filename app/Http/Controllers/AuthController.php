@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use JWTAuth;
 use Validator;
 use App\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthController extends Controller {
   protected static $rules = [
@@ -23,8 +19,13 @@ class AuthController extends Controller {
    * @return void
    */
   public function __construct() {
-    // $this->middleware('tymon.jwt.auth', ['except' => ['signup', 'login']]);
-    $this->middleware('auth:api', ['except' => ['signup', 'login']]);
+    $this->middleware('auth:api', [
+      'except' => [
+        'signup',
+        'login',
+        'unauthenticated',
+      ],
+    ]);
   }
 
   /**
@@ -72,13 +73,13 @@ class AuthController extends Controller {
     $credentials = request(['email', 'password']);
 
     if (!$token = auth()->attempt($credentials)) {
-      return response()->json(['error' => 'Unauthorized'], 401);
+      return response()->json(['error' => ['message' => 'Unauthorized']], 401);
     }
 
     try {
       $user = auth()->userOrFail();
     } catch (UserNotDefinedException $e) {
-      return response()->json(['error' => 'Unauthorized'], 401);
+      return response()->json(['error' => ['message' => 'Unauthorized']], 401);
     }
 
     $response = [
@@ -109,16 +110,6 @@ class AuthController extends Controller {
    */
   public function logout() {
     auth()->logout();
-    
-    // try {
-    //   JWTAuth::parseToken()->invalidate();
-    // } catch (TokenExpiredException $e) {
-    //     return response()->json(['error' => 'token_expired'], $e->getStatusCode());
-    // } catch (TokenInvalidException $e) {
-    //     return response()->json(['error' => 'token_invalid'], 401);
-    // } catch (JWTException $e) {
-    //     return response()->json(['error' => 'token_not_provided'], $e->getStatusCode());
-    // }
 
     return response()->json(['message' => 'Successfully logged out']);
   }
@@ -145,5 +136,9 @@ class AuthController extends Controller {
       'token_type' => 'bearer',
       'expires_in' => auth()->factory()->getTTL() * 60
     ]);
+  }
+
+  public function unauthenticated() {
+    return response()->json(['error' => ['message' => 'Unauthenticated']], 401);
   }
 }

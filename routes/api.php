@@ -13,18 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/khlafjhajlkhfalkaflkjfakljafjbafjafkj', function () {
-  return response()->json(['error' => ['message' => 'Unauthenticated']], 401);
-})->name('login');
-
-Route::get('/ingredients', function () {
-  return response()->json([
-    'salad' => 0,
-    'bacon' => 0,
-    'cheese' => 0,
-    'meat' => 0,
-  ], 200);
-});
+Route::get('/ingredients', 'IngredientsController@index');
 
 Route::group([
   'middleware' => 'api',
@@ -44,4 +33,5 @@ Route::group([
   Route::post('logout', 'AuthController@logout');
   Route::post('refresh', 'AuthController@refresh');
   Route::post('me', 'AuthController@me');
+  Route::get('khlafjhajlkhfalkaflkjfakljafjbafjafkj', 'AuthController@unauthenticated')->name('login');
 });
