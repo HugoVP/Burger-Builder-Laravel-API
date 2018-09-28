@@ -4,17 +4,14 @@ services:
     restart: on-failure
     build:
       dockerfile: dev.dockerfile
-      context: ./      
+      context: ./
+    command: sh -c 'chmod +x wait-for.sh && ./wait-for.sh ${DB_HOST}:${DB_PORT} -- php artisan migrate && php artisan serve --host=0.0.0.0 --port=8000'
     volumes:
-      - /var/www/vendor
-      - ./:/var/www
+      - /var/www/dbdata/
+      - /var/www/.git/
+      - /var/www/vendor/
+      - ./:/var/www/
     environment:
-      # - DB_CONNECTION=mysql
-      # - DB_HOST=database
-      # - DB_PORT=3306
-      # - DB_DATABASE=homestead
-      # - DB_USERNAME=homestead
-      # - DB_PASSWORD=secret
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -23,18 +20,15 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - 8000:8000
+    depends_on:
+      - database
   database:
     restart: always
-    # image: mysql:latest
-    image: mysql:5.6
-    # command: --default-authentication-plugin=mysql_native_password
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
     volumes: 
       - ./dbdata:/var/lib/mysql
     environment:
-      # MYSQL_DATABASE: homestead
-      # MYSQL_USER: homestead
-      # MYSQL_ROOT_PASSWORD: secret
-      # MYSQL_PASSWORD: secret
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}

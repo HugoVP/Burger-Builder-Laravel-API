@@ -15,3 +15,6 @@ sql/
 
 *dockerfile
 docker-compose*.yaml
+.git/
+.DS_Store
+dbdata/
