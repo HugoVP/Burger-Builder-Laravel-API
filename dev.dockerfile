@@ -15,8 +15,7 @@ RUN chmod +x composer-install.sh \
 
 COPY ./ ./
 
-RUN php artisan key:generate; \
-  php artisan route:cache; \
+RUN php artisan route:cache; \
   php artisan config:cache
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
