@@ -15,7 +15,7 @@ class CorsMiddleware {
    * @return mixed
    */
   public function handle($request, Closure $next) {
-    header('Access-Control-Allow-Origin: ' . env('URL_ORIGIN'));
+    header('Access-Control-Allow-Origin: ' . env('URL_ORIGIN', '*'));
     header('Access-Control-Allow-Headers: Content-Type');
     
     return $next($request);
