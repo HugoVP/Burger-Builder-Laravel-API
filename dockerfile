@@ -8,7 +8,7 @@ FROM php:7.1.3-fpm-alpine
 
 WORKDIR /var/www
 
-COPY --from=installation /app ./
+COPY --from=installation --chown=www-data:www-data /app ./
 
 RUN apk add --update postgresql-dev \
   && docker-php-ext-install pdo_pgsql
